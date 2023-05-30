@@ -8,8 +8,6 @@ import {Schema} from 'mongoose';
 // Connect to the db
 const DB = new DataBase("mongodb://127.0.0.1:27017/BusTCPDB")
 
-//DataBase.test()
-const TkuBusModel = mongoose.model("tkubusdb", new Schema< InTkuBus_interface>);
 const app = express()
 const port = 3000
 

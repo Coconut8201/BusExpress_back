@@ -15,12 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const DataBase_1 = require("./utils/DataBase");
 const Routers_1 = require("./Routers");
-const mongoose_1 = __importDefault(require("mongoose"));
-const mongoose_2 = require("mongoose");
 // Connect to the db
 const DB = new DataBase_1.DataBase("mongodb://127.0.0.1:27017/BusTCPDB");
-//DataBase.test()
-const TkuBusModel = mongoose_1.default.model("tkubusdb", new mongoose_2.Schema);
 const app = (0, express_1.default)();
 const port = 3000;
 function alert() {
