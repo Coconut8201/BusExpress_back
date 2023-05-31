@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用者登入</title>
+</head>
+<body>
+    <% if (UserInfo==null) { %>
+        <script>
+            alert('錯誤的帳密');
+        </script>
+    <% } %>
+    <form action="/userlogin" method="GET">
+        <br>
+            <label>請輸入使用者名稱:</label>
+            <input type="text" name="UserName">
+        <br>
+        <br>
+            <label>請輸入使用者密碼:</label>
+            <input type="text" name="UserPassword">
+        </br>
+        <p></p>
+        <input type="submit" value="登入">
+        </br>
+    </form>
+    
+    <!-- 註冊帳號 -->
+    <form action="/userlogin/usercreate" method="GET">
+        <input type="submit" value="註冊帳號">
+    </form>
+
+    <form action="/index" method="GET">
+        <br>
+        <input id="submit" type="submit" value="返回主頁">
+        </br>
+    </form>
+</body>
+</html>

@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DataBase = void 0;
 const mongoose_1 = require("mongoose");
 const TkuBus_1 = require("../models/TkuBus");
+const UserModel_1 = require("../models/UserModel");
 class DataBase {
     constructor(url) {
         this.init(url).then(() => {
@@ -25,16 +26,7 @@ class DataBase {
             this.DB = yield (0, mongoose_1.connect)(url);
         });
     }
-    // static async test(){
-    //     const TkuBusModel = mongoose.model("tkubusdbs", new Schema<InTkuBus_interface>);
-    //     TkuBusModel.find({})
-    //         .exec()
-    //         .then((data) => {
-    //             console.log(data);
-    //         }).catch((e) => {
-    //             console.log(e);
-    //         })
-    // }
+    //資料庫找公車
     static findBusName(str) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -44,13 +36,46 @@ class DataBase {
             }
             catch (e) {
                 //console.log(e);
+                return null;
                 console.log(`他媽的不要亂輸入公車`);
+            }
+        });
+    }
+    //查詢使用者帳號
+    static findUser(UserNameIn, UserPassword) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                let data = yield UserModel_1.UsersModel.findOne({
+                    name: UserNameIn,
+                    password: UserPassword,
+                }).exec();
+                console.log(`你拿到了使用者資料(DB)${data}`);
+                return data;
+            }
+            catch (e) {
+                console.log(`DB findUser Error: ${e}`);
+                //console.log(`他媽的不要亂輸入使用者`);
+            }
+        });
+    }
+    //創建新的使用者資料庫項目
+    static CreateNewUser(nameIn, passwordIn) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log(`DB: nameIn = ${nameIn}, passwordIn=${passwordIn}`);
+            try {
+                const user = new UserModel_1.UsersModel({
+                    name: nameIn,
+                    password: passwordIn,
+                });
+                yield user.save();
+                return user;
+            }
+            catch (_a) {
+                /** 如果沒輸入帳號或是密碼就會大爆錯 */
+                console.log(`DB 創建帳號失敗`);
+                return null; //創建失敗就會回傳null
             }
         });
     }
 }
 exports.DataBase = DataBase;
-// 定義 findBusName() 方法
-// //進行公車名稱在TKUBus中查詢
-// static async findBusName(): Promise<any>{
-// }

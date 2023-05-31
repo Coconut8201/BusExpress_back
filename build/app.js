@@ -15,50 +15,86 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const DataBase_1 = require("./utils/DataBase");
 const Routers_1 = require("./Routers");
-const mongoose_1 = __importDefault(require("mongoose"));
-const mongoose_2 = require("mongoose");
 // Connect to the db
 const DB = new DataBase_1.DataBase("mongodb://127.0.0.1:27017/BusTCPDB");
-//DataBase.test()
-const TkuBusModel = mongoose_1.default.model("tkubusdb", new mongoose_2.Schema);
 const app = (0, express_1.default)();
 const port = 3000;
-function alert() {
-}
+let isFirsUserLogintRequest;
+let isFirstUserCreateRequest;
+let isFirst_FindBus_Request;
+let isFirst_index_Request;
 //http://localhost:3000
 //app.use(express.static('public'));//设置静態文件目录
 app.set("view engine", "ejs");
-app.get('/', (req, res) => {
-    res.render("index.ejs"); //渲染ejs模板
+//主頁
+app.get('/index', (req, res) => {
+    isFirsUserLogintRequest = true; /** 是否為第一次訪問\userlogin */
+    isFirstUserCreateRequest = true; /** 是否為第一次訪問\userlogin\usercreate */
+    isFirst_FindBus_Request = true;
+    //isFirst_index_Request = true;
+    res.render("index.ejs");
 });
-// async function findnewnew(str:string, res:any) {
-//     try {
-//         let data = await TkuBusModel.findOne({ RouteName: str }).exec();
-//         console.log(`第二個${data}`);
-//         return data
-//     } catch (e) {
-//         console.log(e);
-//     }
-// }
-let data1; //回傳回來的公車資料
+let data1;
 app.get('/findBus', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { busName } = req.query;
+    if (busName == "") {
+        res.render("nullBus");
+    }
     try {
         data1 = yield DataBase_1.DataBase.findBusName(busName);
-        res.render("test", { busName, data1 });
+        res.render("Bus", { busName, data1 });
     }
-    catch (e) {
-        //res.send("無效的公車號碼");
+    catch (e) { //這邊要寫一個跳出錯誤的方法才行
         console.log(`他媽的不要亂輸入公車`);
         console.log(e);
     }
 }));
-// app.get('/',(res:any, req:any)=>{
-//     res.render("index.ejs");
-// })
+/**使用者頁面--登入已有的使用者資料 */
+app.get('/userlogin', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    isFirstUserCreateRequest = true;
+    if (isFirsUserLogintRequest) {
+        let UserInfo = "1";
+        res.render("userlogin", { UserInfo });
+        isFirsUserLogintRequest = false;
+    }
+    else {
+        let { UserName, UserPassword } = req.query;
+        DataBase_1.DataBase.findUser(UserName, UserPassword).then(UserInfo => {
+            (UserInfo == null) ? (console.log(`查無此帳號，請確認您的帳密`), res.render("userlogin", { UserInfo })) : {};
+        }).catch(error => {
+            console.log(`findUser Error: ${error}`);
+        });
+    }
+}));
+/**使用者頁面--建立新的使用者資料 */
+app.get('/userlogin/usercreate', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    isFirsUserLogintRequest = true;
+    if (isFirstUserCreateRequest) {
+        let user = "1";
+        res.render("usercreate", { user });
+        isFirstUserCreateRequest = false;
+    }
+    else {
+        let { UserName, UserPassword } = req.query;
+        //console.log(`UserName = ${UserName}, UserPassword = ${UserPassword}`)
+        if (UserName == "" || UserPassword == "") {
+            let user = null;
+            res.render("usercreate", { user });
+        }
+        else {
+            DataBase_1.DataBase.CreateNewUser(UserName, UserPassword).then(user => {
+                (user != null) ? //成功
+                    (console.log(`新建使用者資料成功`), res.render("usercreate", { user })) :
+                    { /** 創建失敗在else */};
+            }).catch(error => {
+                console.log(`CreateNewUser Error: ${error}`);
+            });
+        }
+    }
+}));
 for (const route of Routers_1.router) {
     app.use(route.getRouter());
 }
 app.listen(port, () => {
-    console.log('listening on *:' + port);
+    console.log('listening on *:' + port + "\nhttp://localhost:3000/index");
 });

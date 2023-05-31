@@ -3,6 +3,7 @@ import { Schema } from 'mongoose';
 import { InTkuBus_interface } from '../interfaces/InTkuBus_interface';
 import { data } from 'jquery';
 import { TkuBusModel } from '../models/TkuBus';
+import { UsersModel } from '../models/UserModel';
 
 
 export class DataBase{
@@ -18,49 +19,54 @@ export class DataBase{
         this.DB = await connect(url)
     }
  
-    // static async test(){
-    //     const TkuBusModel = mongoose.model("tkubusdbs", new Schema<InTkuBus_interface>);
-    //     TkuBusModel.find({})
-    //         .exec()
-    //         .then((data) => {
-    //             console.log(data);
-    //         }).catch((e) => {
-    //             console.log(e);
-    //         })
-    // }
-
+    //資料庫找公車
     static async findBusName(str: string) {   
         try {
             let data = await TkuBusModel.findOne({ RouteName: str }).exec();
             console.log(`你拿到了${data}`);
-        return data
-    } catch (e) {
+            return data
+        } catch (e) {
         //console.log(e);
+        return null;
         console.log(`他媽的不要亂輸入公車`);
+        }
+
     }
 
-}
-    
-    // 定義 findBusName() 方法
-    // static async findBusName(str: string):Promise<any>{
-    //     //連結collection
-    //     try {
-    //         const bus = await TkuBusModel.findOne({ RouteName: str });
-    //         if (bus) {
-    //             console.log(bus); // 輸出找到的文檔
-    //         } else {
-    //             console.log('在資料庫中未找到指定的公車資訊');
-    //         }
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // }
+    //查詢使用者帳號
+    static async findUser(UserNameIn:string, UserPassword:string) {
+        try {
+            let data = await UsersModel.findOne({ 
+                name: UserNameIn,
+                password: UserPassword,
+            }).exec();
+            console.log(`你拿到了使用者資料(DB)${data}`);
+            return data
+        } catch (e) {
+            console.log(`DB findUser Error: ${e}`);
+            //console.log(`他媽的不要亂輸入使用者`);
+        }
+
+    }
+    //創建新的使用者資料庫項目
+    static async CreateNewUser(nameIn: string, passwordIn: string): Promise<any>{
+        console.log(`DB: nameIn = ${nameIn}, passwordIn=${passwordIn}`)
+        try{
+            const user = new UsersModel({
+                name: nameIn,
+                password: passwordIn,
+            });
+            await user.save();
+            return user;
+        }catch{
+            /** 如果沒輸入帳號或是密碼就會大爆錯 */
+            console.log(`DB 創建帳號失敗`)
+            return null; //創建失敗就會回傳null
+        }
+    }
+
+
+
+
 
 }
-
-// 定義 findBusName() 方法
-
-// //進行公車名稱在TKUBus中查詢
-// static async findBusName(): Promise<any>{
-
-// }
