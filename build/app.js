@@ -12,9 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.data1RouteName = void 0;
 const express_1 = __importDefault(require("express"));
 const DataBase_1 = require("./utils/DataBase");
 const Routers_1 = require("./Routers");
+const fetch_1 = require("./utils/tools/fetch");
 // Connect to the db
 const DB = new DataBase_1.DataBase("mongodb://127.0.0.1:27017/BusTCPDB");
 const app = (0, express_1.default)();
@@ -23,7 +25,7 @@ let isFirsUserLogintRequest;
 let isFirstUserCreateRequest;
 let isFirst_FindBus_Request;
 let isFirst_index_Request;
-//http://localhost:3000
+//http://localhost:3000/index
 //app.use(express.static('public'));//设置静態文件目录
 app.set("view engine", "ejs");
 //主頁
@@ -40,13 +42,29 @@ app.get('/findBus', (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     if (busName == "") {
         res.render("nullBus");
     }
-    try {
-        data1 = yield DataBase_1.DataBase.findBusName(busName);
-        res.render("Bus", { busName, data1 });
-    }
-    catch (e) { //這邊要寫一個跳出錯誤的方法才行
-        console.log(`他媽的不要亂輸入公車`);
-        console.log(e);
+    else {
+        try {
+            data1 = yield DataBase_1.DataBase.findBusName(busName);
+            if (data1 == null) {
+                res.render("nullBus");
+            }
+            else {
+                exports.data1RouteName = data1.RouteName;
+                let endpoint = `https://ptx.transportdata.tw/MOTC/v2/Bus/EstimatedTimeOfArrival/City/NewTaipei/${exports.data1RouteName}?%24top=100&%24format=JSON`;
+                yield (0, fetch_1.getBusEstTime)(endpoint).then(dataBusBack => {
+                    console.log(`dataBusBack = ${dataBusBack}`);
+                }).catch(error => {
+                    console.log(` app_/findBus_getBusEstTime_error: ${error}`);
+                });
+                console.log(`endpoint = ${endpoint}`);
+                console.log(exports.data1RouteName);
+                res.render("Bus", { busName, data1 });
+            }
+        }
+        catch (e) { //這邊要寫一個跳出錯誤的方法才行
+            console.log(`他媽的不要亂輸入公車`);
+            console.log(e);
+        }
     }
 }));
 /**使用者頁面--登入已有的使用者資料 */

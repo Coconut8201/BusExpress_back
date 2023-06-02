@@ -5,6 +5,7 @@ import { InTkuBus_interface } from './interfaces/InTkuBus_interface';
 import  mongoose  from 'mongoose';
 import {Schema} from 'mongoose';
 import { error } from 'jquery';
+import { getBusEstTime } from './utils/tools/fetch';
 
 // Connect to the db
 const DB = new DataBase("mongodb://127.0.0.1:27017/BusTCPDB")
@@ -17,7 +18,7 @@ let isFirstUserCreateRequest:boolean;
 let isFirst_FindBus_Request:boolean;
 let isFirst_index_Request:boolean;
 
-//http://localhost:3000
+//http://localhost:3000/index
 //app.use(express.static('public'));//设置静態文件目录
 app.set("view engine", "ejs")
 
@@ -33,18 +34,36 @@ app.get('/index',(req:any,res:any)=>{
 });
 
 let data1: any
+export let data1RouteName:string
 app.get('/findBus', async (req: any, res: any) => {
     let { busName } = req.query;
     if (busName == "") {
         res.render("nullBus")
     }
-    try {
-        data1 = await DataBase.findBusName(<string>busName);
-        res.render("Bus", { busName, data1 });
-    } catch (e) { //這邊要寫一個跳出錯誤的方法才行
-        console.log(`他媽的不要亂輸入公車`);
-        console.log(e);
+    else{
+        try {
+            data1 = await DataBase.findBusName(<string>busName);
+            if(data1 == null){
+                res.render("nullBus")
+            }
+            else{
+                data1RouteName = data1.RouteName;
+                let endpoint: string = `https://ptx.transportdata.tw/MOTC/v2/Bus/EstimatedTimeOfArrival/City/NewTaipei/${data1RouteName}?%24top=100&%24format=JSON`;
+                await getBusEstTime(endpoint).then(dataBusBack=>{
+                    console.log(`dataBusBack = ${dataBusBack}`)
+                }).catch(error=>{
+                    console.log(` app_/findBus_getBusEstTime_error: ${error}`)
+                })
+                console.log(`endpoint = ${endpoint}`)
+                console.log(data1RouteName)
+                res.render("Bus", { busName, data1 });
+            }
+        } catch (e) { //這邊要寫一個跳出錯誤的方法才行
+            console.log(`他媽的不要亂輸入公車`);
+            console.log(e);
+        }
     }
+    
 });
 
 

@@ -23,7 +23,7 @@ export class DataBase{
     static async findBusName(str: string) {   
         try {
             let data = await TkuBusModel.findOne({ RouteName: str }).exec();
-            console.log(`你拿到了${data}`);
+            //console.log(`你拿到了${data}`);
             return data
         } catch (e) {
         //console.log(e);

@@ -31,7 +31,7 @@ class DataBase {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let data = yield TkuBus_1.TkuBusModel.findOne({ RouteName: str }).exec();
-                console.log(`你拿到了${data}`);
+                //console.log(`你拿到了${data}`);
                 return data;
             }
             catch (e) {
