@@ -30,7 +30,6 @@ app.get('/index',(req:any,res:any)=>{
     //isFirst_index_Request = true;
 
     res.render("index.ejs");
-    
 });
 
 let data1: any
