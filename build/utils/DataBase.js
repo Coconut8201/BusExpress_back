@@ -13,6 +13,7 @@ exports.DataBase = void 0;
 const mongoose_1 = require("mongoose");
 const TkuBus_1 = require("../models/TkuBus");
 const UserModel_1 = require("../models/UserModel");
+const BusImageModel_1 = require("../models/BusImageModel");
 class DataBase {
     constructor(url) {
         this.init(url).then(() => {
@@ -74,6 +75,21 @@ class DataBase {
                 /** 如果沒輸入帳號或是密碼就會大爆錯 */
                 console.log(`DB 創建帳號失敗`);
                 return null; //創建失敗就會回傳null
+            }
+        });
+    }
+    //查詢公車路線圖片
+    static findBusImage(RouteName) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log(`DB findBusImage你輸入的公車名稱是${RouteName}`);
+            try {
+                let imageSrc = yield BusImageModel_1.BusImageModel.findOne({ RouteName: RouteName }).exec();
+                console.log(`你拿到了${imageSrc}`);
+            }
+            catch (e) {
+                //console.log(e);
+                return null;
+                console.log(`他媽的不要亂輸入公車, 找不到地圖位置`);
             }
         });
     }
