@@ -4,24 +4,33 @@
     <style>
         body {
             background-color: rgb(232, 209, 197);
+            color:rgb(109,46,70);
         }
 
         h1 {
             /* background-image: url("../pic/head.jpg");*/
+            font-size: 60px;
             background-color: rgb(150, 122, 115);
             width: 100% ;
             margin: 0;
             padding: 2rem;
-
         }
 
         label {
             font-size: 30px;
         }
-
-        input {
-            font-size: 20px;
+        
+        input.r1{
+            color: rgb(109,46,70);
+            font-size: 30px;
         }
+        input.r2{
+            color: white;
+            font-size: 30px;
+            border-radius: 15px;
+            background-color:rgb(109,46,70);
+        } 
+        
     </style>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -37,13 +46,13 @@
         <b><label>請輸入欲查詢的公車名稱:</label></b>
         <br />
         <br />
-        <input type="text" placeholder="公車名稱" name="busName">
-        <input type="submit" value="提交">
+        <input class="r1" type="text" placeholder="公車名稱" name="busName">
+        <input class="r2" type="submit" value="提交">
         </br>
     </form>
 
     <form action="/userlogin" method="GET">
-        <input type="submit" value="登入帳號" style="position:absolute; bottom: 0; right: 0;">
+        <input class="r2" type="submit" value="登入帳號" style="position:absolute; bottom: 0; right: 0;">
     </form>
 
 </body>

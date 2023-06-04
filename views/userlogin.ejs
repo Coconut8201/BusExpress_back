@@ -1,40 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <style>
+        body {
+            background-color: rgb(232, 209, 197);
+        }
+
+        div {
+            float: left;
+        }
+
+        h1 {
+            color: rgb(109, 46, 70);
+            margin-left: 200px;
+            font-size: 80px;
+        }
+
+        label {
+            color: rgb(109, 46, 70);
+            font-size: 30px;
+        }
+
+        input.r1 {
+            color: rgb(109, 46, 70);
+            font-size: 30px;
+        }
+
+        input.r2 {
+            color: white;
+            font-size: 30px;
+            border-radius: 15px; /** 設定圓角*/
+            background-color: rgb(109, 46, 70);
+        }
+    </style>
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>使用者登入</title>
 </head>
+
 <body>
+    <div>
+        <h1>TkuBus</h1>
+        <img src="https://img.onl/OdmJse" style="height:900pX; margin-left:-100px ;margin-top:-200px ;" />
+    </div>
     <% if (UserInfo==null) { %>
         <script>
             alert('錯誤的帳密');
         </script>
     <% } %>
-    <form action="/userlogin" method="GET">
-        <br>
-            <label>請輸入使用者名稱:</label>
-            <input type="text" name="UserName">
-        <br>
-        <br>
-            <label>請輸入使用者密碼:</label>
-            <input type="text" name="UserPassword">
-        </br>
-        <p></p>
-        <input type="submit" value="登入">
-        </br>
-    </form>
-    
-    <!-- 註冊帳號 -->
-    <form action="/userlogin/usercreate" method="GET">
-        <input type="submit" value="註冊帳號">
-    </form>
 
-    <form action="/index" method="GET">
-        <br>
-        <input id="submit" type="submit" value="返回主頁">
-        </br>
-    </form>
-</body>
+    <p style="font-size: 70px; color: rgb(109,46,70);">Welcome~</p>
+    <b>
+        <p style="font-size: 50px; color: rgb(109,46,70);">登入</p>
+    </b>
+    <div style="text-align:center;"> <!-- 文字置中 -->
+        <form action="/userlogin" method="GET">
+            <br>
+            <label>請輸入使用者名稱:</label>
+            <input class="r1" type="text" name="UserName">
+            <br>
+            <br>
+            <label>請輸入使用者密碼:</label>
+            <input class="r1" type="text" name="UserPassword">
+            </br>
+            <br/>
+            <input class="r2" type="submit" value="登入">
+            </br>
+        </form>
+        <br/>
+        <!-- 註冊帳號 -->
+        <form action="/userlogin/usercreate" method="GET">
+            <input class="r2" type="submit" value="註冊帳號">
+        </form>
+        <form action="/index" method="GET">
+            <br>
+            <input class="r2" id="submit" type="submit" value="返回主頁 "
+                style="position: fixed; right: 1px;bottom: 1px ;">
+            </br>
+        </form>
+    </div>
+</bod>
+
 </html>

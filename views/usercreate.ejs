@@ -1,36 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>創建使用者資料</title>
 </head>
-<body>
+
+<body style="background-color:rgb(232, 209, 197);">
     <form action="/userlogin/usercreate" method="GET">
         <br>
-        <label>請輸入要創建的使用者名稱:</label>
+        <label style="color:brown;">
+            <font style="text-shadow:0px 0px 15px #df163bda;">請輸入要創建的使用者名稱:</p>
+            </font>
+        </label>
         <input type="text" name="UserName">
         <br>
         <br>
-        <label>請輸入使用者密碼:</label>
+        <label style="color:brown;">
+            <font style="text-shadow:0px 0px 15px #df163bda;">請輸入使用:</p>
+            </font>
+        </label>
         <input type="text" name="UserPassword">
         </br>
         <p></p>
-        <% if ( user == null) { %>
+        <p></p>
+        <div class="box">
+            <img class="photo"
+                src="https://o.remove.bg/downloads/c339c606-0a5e-431f-a89d-dfd84e44a864/%E4%B8%8B%E8%BC%89__1_-removebg-preview.png"
+                alt="" width="30%" height="30%">
+        </div>
+        <p></p>
+        <% if ( user==null) { %>
             <script>
                 alert('創建帳號失敗，請確認你所輸入的帳號密碼');
             </script>
-        <% } %>
-        <% if( user !=null && user !="1" ) { %>
-            <script>
-                alert('帳號創建成功, 請回到登入頁登入');
-            </script>
-        <% } %>
-        <input type="submit" value="提交">
-        </br>
+            <% } %>
+                <% if( user !=null && user !="1" ) { %>
+                    <script>
+                        alert('帳號創建成功, 請回到登入頁登入');
+                    </script>
+                    <% } %>
+                        <input type="submit" value="提交">
+                        </br>
     </form>
-
     <form action="/index" method="GET">
         <br>
         <input id="submit" type="submit" value="返回主頁">
@@ -43,4 +57,5 @@
         </br>
     </form>
 </body>
+
 </html>

@@ -1,17 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <style>
+        body {
+            background-color: rgb(232, 209, 197);
+            color: rgb(109, 46, 70);
+        }
+
+        div {
+            text-align: center;
+            height: 150px;
+            line-height: 150px;
+        }
+
+        input {
+            color: white;
+            font-size: 30px;
+            border-radius: 15px;
+            background-color: rgb(109, 46, 70);
+        }
+    </style>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>錯誤</title>
 </head>
+
 <body>
-    <h3>你輸入了錯誤的公車，請重新輸入</h3>
-    <form action="/index" method="GET">
-        <br>
-        <input id="submit" type="submit" value="返回主頁">
-        </br>
-    </form>
+    <div>
+        <h1 style="font-size: 40px;">你輸入了錯誤的公車，請重新輸入</h1>
+        <img src="https://img.onl/ayUE5m" />
+        <form action="/index" method="GET">
+            <input id="submit" type="submit" value="返回主頁">
+        </form>
+    </div>
 </body>
+
 </html>
