@@ -5,7 +5,7 @@
 2. 進入Buspupu資料夾
 我們使用MongoDB資料庫，並使用docker打包，如要連結到mongo資料庫則使用連結: 
 mongodb://user:userpassword@192.168.1.25/TkuBusPuPu
-3. 連結此資料庫需是先連結VPN:帳號：ethci 密碼：@ethci2925
+3. 連結此資料庫需是先連結VPN，請聯繫 410630619 張宜蓁以獲得 .ovpn檔案
 4. npm i 下載所需的資源包
 5. npm run dev 執行伺服器
 6. 連結到網址: http://localhost:3000/index ，公車查詢主頁
