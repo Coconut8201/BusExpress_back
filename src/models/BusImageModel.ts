@@ -6,4 +6,8 @@ const BusImageSchema = new Schema<BusImageInterface>({
     RouteMapImageUrl:{type:String, required:false},
 })
 
+<<<<<<< HEAD
 export const BusImageModel = mongoose.model("busrouteimage",BusImageSchema)
+=======
+export const BusImageModel = mongoose.model("BusRouteImage",BusImageSchema)
+>>>>>>> e40648e6683863ebfb8d35c7a5923e7cc368ecbe

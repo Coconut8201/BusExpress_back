@@ -69,6 +69,7 @@ export class DataBase{
 
     //查詢公車路線圖片
     static async findBusImage(RouteName:string): Promise<any>{
+<<<<<<< HEAD
         //console.log(`DB findBusImage你輸入的公車名稱是${RouteName}`)
         try{
             let imageSrc = await BusImageModel.findOne({RouteName:RouteName}).exec();
@@ -79,6 +80,16 @@ export class DataBase{
             //console.log(`他媽的不要亂輸入公車, 找不到地圖位置`);
             return null;
             
+=======
+        console.log(`DB findBusImage你輸入的公車名稱是${RouteName}`)
+        try{
+            let imageSrc = await BusImageModel.findOne({RouteName:RouteName}).exec();
+            console.log(`你拿到了${imageSrc}`)
+        }catch(e) {
+            //console.log(e);
+            return null;
+            console.log(`他媽的不要亂輸入公車, 找不到地圖位置`);
+>>>>>>> e40648e6683863ebfb8d35c7a5923e7cc368ecbe
         }
     }
 
