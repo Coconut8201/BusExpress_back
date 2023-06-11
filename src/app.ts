@@ -4,11 +4,10 @@ import { router } from './Routers';
 import { InTkuBus_interface } from './interfaces/InTkuBus_interface';
 import  mongoose  from 'mongoose';
 import {Schema} from 'mongoose';
-import { error } from 'jquery';
 import { getBusEstTime } from './utils/tools/fetch';
 
 // Connect to the db
-const DB = new DataBase("mongodb://127.0.0.1:27017/BusTCPDB")
+const DB = new DataBase("mongodb://user:userpassword@192.168.1.25/TkuBusPuPu")
 
 const app = express()
 const port = 3000
@@ -20,6 +19,7 @@ let isFirst_index_Request:boolean;
 
 //http://localhost:3000/index
 //app.use(express.static('public'));//设置静態文件目录
+
 app.set("view engine", "ejs")
 
 //主頁
@@ -30,7 +30,6 @@ app.get('/index',(req:any,res:any)=>{
     //isFirst_index_Request = true;
 
     res.render("index.ejs");
-    
 });
 
 let data1: any
@@ -46,17 +45,14 @@ app.get('/findBus', async (req: any, res: any) => {
             if(data1 == null){
                 res.render("nullBus")
             }
-            else{
+            else{ //最終成功的道路在這裡
+                let imageSrc = await DataBase.findBusImage(<string>busName)
+                let OutImageSrc = `<img class="photo" src="${imageSrc}" alt="" width="60%" height="60%">`
+                //console.log(`imageSrc  = ${imageSrc}`)
+                //console.log(`OutimageSrc  = ${OutImageSrc}`)
                 data1RouteName = data1.RouteName;
                 let endpoint: string = `https://ptx.transportdata.tw/MOTC/v2/Bus/EstimatedTimeOfArrival/City/NewTaipei/${data1RouteName}?%24top=100&%24format=JSON`;
-                await getBusEstTime(endpoint).then(dataBusBack=>{
-                    console.log(`dataBusBack = ${dataBusBack}`)
-                }).catch(error=>{
-                    console.log(` app_/findBus_getBusEstTime_error: ${error}`)
-                })
-                console.log(`endpoint = ${endpoint}`)
-                console.log(data1RouteName)
-                res.render("Bus", { busName, data1 });
+                res.render("Bus", { busName, data1, OutImageSrc});
             }
         } catch (e) { //這邊要寫一個跳出錯誤的方法才行
             console.log(`他媽的不要亂輸入公車`);

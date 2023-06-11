@@ -16,9 +16,8 @@ exports.data1RouteName = void 0;
 const express_1 = __importDefault(require("express"));
 const DataBase_1 = require("./utils/DataBase");
 const Routers_1 = require("./Routers");
-const fetch_1 = require("./utils/tools/fetch");
 // Connect to the db
-const DB = new DataBase_1.DataBase("mongodb://127.0.0.1:27017/BusTCPDB");
+const DB = new DataBase_1.DataBase("mongodb://user:userpassword@192.168.1.25/TkuBusPuPu");
 const app = (0, express_1.default)();
 const port = 3000;
 let isFirsUserLogintRequest;
@@ -48,17 +47,14 @@ app.get('/findBus', (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             if (data1 == null) {
                 res.render("nullBus");
             }
-            else {
+            else { //最終成功的道路在這裡
+                let imageSrc = yield DataBase_1.DataBase.findBusImage(busName);
+                let OutImageSrc = `<img class="photo" src="${imageSrc}" alt="" width="60%" height="60%">`;
+                //console.log(`imageSrc  = ${imageSrc}`)
+                //console.log(`OutimageSrc  = ${OutImageSrc}`)
                 exports.data1RouteName = data1.RouteName;
                 let endpoint = `https://ptx.transportdata.tw/MOTC/v2/Bus/EstimatedTimeOfArrival/City/NewTaipei/${exports.data1RouteName}?%24top=100&%24format=JSON`;
-                yield (0, fetch_1.getBusEstTime)(endpoint).then(dataBusBack => {
-                    console.log(`dataBusBack = ${dataBusBack}`);
-                }).catch(error => {
-                    console.log(` app_/findBus_getBusEstTime_error: ${error}`);
-                });
-                console.log(`endpoint = ${endpoint}`);
-                console.log(exports.data1RouteName);
-                res.render("Bus", { busName, data1 });
+                res.render("Bus", { busName, data1, OutImageSrc });
             }
         }
         catch (e) { //這邊要寫一個跳出錯誤的方法才行

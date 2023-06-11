@@ -4,6 +4,7 @@ import { InTkuBus_interface } from '../interfaces/InTkuBus_interface';
 import { data } from 'jquery';
 import { TkuBusModel } from '../models/TkuBus';
 import { UsersModel } from '../models/UserModel';
+import { BusImageModel } from '../models/BusImageModel';
 
 
 export class DataBase{
@@ -66,7 +67,20 @@ export class DataBase{
     }
 
 
-
+    //查詢公車路線圖片
+    static async findBusImage(RouteName:string): Promise<any>{
+        //console.log(`DB findBusImage你輸入的公車名稱是${RouteName}`)
+        try{
+            let imageSrc = await BusImageModel.findOne({RouteName:RouteName}).exec();
+            //console.log(`Database findBusImage try 你拿到了 ${imageSrc}`)
+            return imageSrc?.RouteMapImageUrl
+        }catch(e) {
+            console.log(`Database findBusImage Error: ${e}`);
+            //console.log(`他媽的不要亂輸入公車, 找不到地圖位置`);
+            return null;
+            
+        }
+    }
 
 
 }

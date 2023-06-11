@@ -1,20 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <title>巴士分頁</title>
 </head>
-<body>
-    <h1>恭喜你現在終於他媽的進來到了這裡</h1>
+
+<body style="background-color:rgb(232, 209, 197);">
+    <style>
+        li {
+            margin-bottom: 1em;
+            /* 設置底部邊距為 1 個字母高度 */
+        }
+    </style>
+    <div>
+        <script>
+            let GlobalData
+            $(function () {
+                GetAuthorizationHeader();
+                GetApiResponse();
+            });
+
+            function GetAuthorizationHeader() { //憑證資料
+                const parameter = {
+                    grant_type: "client_credentials",
+                    client_id: "410630619-befaf390-f413-43da",
+                    client_secret: "538563cf-5ee1-4ce0-83c1-56ebea8e93f8"
+                };
+                let auth_url = "https://tdx.transportdata.tw/auth/realms/TDXConnect/protocol/openid-connect/token";
+                $.ajax({
+                    type: "POST",
+                    url: auth_url,
+                    crossDomain: true,
+                    dataType: 'JSON',
+                    data: parameter,
+                    async: false,
+                    success: function (data) {
+                        $("#accesstoken").text(JSON.stringify(data));
+                    },
+                    error: function (xhr, textStatus, thrownError) {
+                    }
+                });
+            }
+            function GetApiResponse() { //api回傳資料
+                let accesstokenStr = $("#accesstoken").text();
+                let accesstoken = JSON.parse(accesstokenStr);
+                if (accesstoken != undefined) {
+                    fetch(`https://ptx.transportdata.tw/MOTC/v2/Bus/EstimatedTimeOfArrival/City/NewTaipei/881?%24top=100&%24format=JSON`, {
+                        headers: {
+                            "authorization": "Bearer " + accesstoken.access_token
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            $('#apireponse').text(JSON.stringify(data));
+                            //console.log('Data', data);
+                            GlobalData = data
+                            for (let i = 0; i < data.length; i++) {
+                                try {
+                                    // console.log(`${data[i].EstimateTime}`)
+                                    console.log(`StopName: ${data[i].StopName.Zh_tw}\nDirection: ${data[i].Direction} \nEstimateTime = ${data[i].EstimateTime}\n\n`)
+                                } catch {
+                                    console.log(`no this bus`)
+                                }
+
+                            }
+                        })
+                        .then(() => {
+                            console.log('GlobalData', GlobalData);
+                            const data22 = GlobalData
+                            const listElement = document.querySelector('#bus-list');
+
+                            // 遍歷陣列中的每個物件
+                            for (let i = 0; i < data22.length; i++) {
+                                const item = data22[i];
+                                const ROUTENAME = item.StopName.Zh_tw;
+                                const DIRECTION = item.Direction;
+                                const ESTIMATETIME = item.EstimateTime;
+
+                                // 創建新的列表項目元素
+                                const listItem = document.createElement('li');
+                                const textNode = document.createTextNode(`<strong>站牌名稱:</strong> ${ROUTENAME} <br><strong>剩餘時間:</strong> ${ESTIMATETIME}秒<br><strong>去返程:</strong> ${DIRECTION}<br>`);
+                                //listItem.appendChild(textNode);
+                                listItem.innerHTML = textNode.textContent;
+
+                                // 將列表項目元素添加到 HTML 列表中
+                                listElement.appendChild(listItem);
+                            }
+                        })
+                        .catch(error => {
+                            console.log('Error:', error);
+                        });
+                }
+            }
+
+        </script>
+
+
+        <h3>取得憑證資料:</h3>
+        <div id="accesstoken" class="align-text-bottom">
+        </div>
+        <h3>api 資料:</h3>
+        <div id="apireponse" class="align-text-bottom">
+        </div>
+
+    </div>
+
+
+    <!-- 
+    <script>
+        const data22 = GlobalData
+        const listElement = document.querySelector('#bus-list');
+
+        // 遍歷陣列中的每個物件
+        for (let i = 0; i < data22.length; i++) {
+            const item = data22[i];
+            const ROUTENAME = item.StopName.Zh_tw;
+            const DIRECTION = item.Direction;
+            const ESTIMATETIME = item.EstimateTime;
+
+            // 創建新的列表項目元素
+            const listItem = document.createElement('li');
+            const textNode = document.createTextNode(`<strong>站牌名稱:</strong> ${ROUTENAME} <br><strong>剩餘時間:</strong> ${ESTIMATETIME}秒<br><strong>去返程:</strong> ${DIRECTION}<br>`);
+            //listItem.appendChild(textNode);
+            listItem.innerHTML = textNode.textContent;
+
+            // 將列表項目元素添加到 HTML 列表中
+            listElement.appendChild(listItem);
+        }
+    </script> -->
+
+    <!-- <body style="background-color:rgb(232, 209, 197);"></body> -->
+    <font style="text-shadow:0px 0px 15px #82cff0da;">
+        <h1>恭喜你現在終於他媽的進來到了這裡</h1>
+    </font>
     <h3>以下是你提供的資料</h3>
-    <p>你給的東西是他媽的<%= busName%></p>
-    <p>公車名字是:<%= data1.RouteName%></p> <%# 取得公車名稱%>
-    <form action="/index" method="GET">
-        <br>
-        <input id="submit" type="submit" value="返回主頁">
-        </br>
-    </form>
+    <p>你輸入的busName = <%= busName%>
+    </p>
+    <p>公車名字是:<%= data1.RouteName%>
+    </p>
+    <%# 取得公車名稱%>
+        <!-- box樣式在哪裡? -->
+        <div class="box">
+            <!-- 插入照片 -->
+            <!-- <img class="photo" src="https://ebus.gov.taipei/File/Get/bfe76479-fc9d-49cb-8507-0017457d25d3?v=638001480132362513" alt="" width="60%" height="60%"> -->
+            <%- OutImageSrc%>
+
+                <!-- 公車表塞在這裡 -->
+                <ul id="bus-list"></ul>
+        </div>
+        <form action="/index" method="GET">
+            <br>
+            <input id="submit" type="submit" value="返回主頁">
+            </br>
+        </form>
 </body>
+
 </html>
